@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
-// import { useAuth } from '../../hooks/auth';
+import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -29,6 +29,7 @@ import {
   CreateAccountButton,
   CreateAccountButtonText,
 } from './styles';
+import api from '../../services/api';
 
 interface SingInFormData {
   email: string;
@@ -40,7 +41,7 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-//   const { signIn } = useAuth();
+  const { signIn } = useAuth();
 
   const handleSignIn = useCallback(
     async (data: SingInFormData) => {
@@ -58,11 +59,12 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        // await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
       } catch (err) {
+        console.log(err);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -77,9 +79,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [
-        // signIn
-    ],
+    [signIn],
   );
 
   return (
